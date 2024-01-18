@@ -1,22 +1,29 @@
 services:
   web:
     image: nginx
+    container_name: test_1
     ports:
       - 127.0.0.1:8080:80
     working_dir: /app
     volumes:
       - ./templates:/usr/share/nginx/html
+    networks:
+      - bridge_networks_1
 
   web2:
     image: nginx
+    container_name: test_2
     ports:
       - 127.0.0.1:8081:80
     working_dir: /app
     volumes:
       - ./templates:/usr/share/nginx/html/welcome.html
+    networks:
+      - bridge_networks_1
 
   db:
     image: postgres:latest
+    container_name: postgres_db
     environment:
         - ${POSTGRES_DB}
         - ${POSTGRES_USER}
@@ -25,3 +32,9 @@ services:
       - 127.0.0.1:8082:5432
     volumes:
       - ./pg_data:/var/lib/postgresql/data
+    networks:
+      - bridge_networks_1
+
+networks:
+  bridge_networks_1:
+    driver: bridge
